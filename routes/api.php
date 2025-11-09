@@ -1,9 +1,7 @@
 <?php
 
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\RegisterUserController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -12,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/register', [RegisterUserController::class, 'store']);
 
 Route::group(['prefix' => '/', 'middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);

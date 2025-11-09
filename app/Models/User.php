@@ -59,6 +59,24 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::needsRehash($password) ? Hash::make($password) : $password;
     }
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (empty($user->username)) {
+                $prefix = 'sh_customer@';
+
+                do {
+                    $number = random_int(10000, 99999);
+                    $username = $prefix . $number;
+                } while (self::where('username', $username)->exists());
+
+                $user->username = $username;
+            }
+        });
+    }
+
     public function cart(): HasOne
     {
         return $this->hasOne(Cart::class, 'user_id');
