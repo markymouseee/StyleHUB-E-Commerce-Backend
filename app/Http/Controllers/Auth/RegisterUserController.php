@@ -16,7 +16,7 @@ class RegisterUserController extends Controller
     {
         return User::create($request->validated())
             ? $this->success([], 'User registered successfully')
-            : $this->error('User registration failed. Please try again later.');
+            : $this->error(["message" => 'User registration failed. Please try again later.']);
     }
 
     public function update() {}

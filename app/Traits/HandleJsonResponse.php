@@ -15,7 +15,7 @@ trait HandleJsonResponse
         ], $code);
     }
 
-    public function error(string $message = 'error', int $code = 429): JsonResponse
+    public function error(array $message = [], int $code = 429): JsonResponse
     {
         return response()->json([
             'status' => 'error',

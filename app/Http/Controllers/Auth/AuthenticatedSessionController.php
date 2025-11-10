@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
-use Illuminate\Auth\Events\Lockout;
+use App\Traits\HandleJsonResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,17 +14,15 @@ use Illuminate\Support\Facades\RateLimiter;
 
 class AuthenticatedSessionController extends Controller
 {
+
+    use HandleJsonResponse;
+
     public function store(LoginRequest $request): JsonResponse
     {
         if (RateLimiter::tooManyAttempts($request->throttleKey(), 5)) {
             $seconds = RateLimiter::availableIn($request->throttleKey());
 
-            return response()->json([
-                'status' => 'error',
-                'errors' => [
-                    'message' => ["Too many attempts. Try again in {$seconds} seconds."]
-                ]
-            ], 429);
+            return $this->error(["message" => "Too many attempts. Try again in {$seconds} seconds."]);
         }
 
         $credentials = $request->only('username_or_email', 'password');
@@ -37,29 +35,20 @@ class AuthenticatedSessionController extends Controller
 
         if (!$user) {
             RateLimiter::hit($request->throttleKey());
-            return response()->json([
-                'status' => 'error',
-                'errors' => [
-                    'message' => ["The provided {$fieldType} not found."]
-                ]
-            ], 422);
+
+            return $this->error(["message" => "The provided {$fieldType} not found."], 422);
         }
 
         if (!Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($request->throttleKey());
-            return response()->json([
-                'status' => 'error',
-                'errors' => [
-                    'message' => ['Wrong password, please try again.']
-                ]
-            ], 422);
+
+            return $this->error(["message" => "Wrong password, please try again."], 422);
         }
 
         RateLimiter::clear($request->throttleKey());
 
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
+        return $this->success([
+            'user' => $user
         ]);
     }
 
