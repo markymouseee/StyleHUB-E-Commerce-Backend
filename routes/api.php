@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\FrontendController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\AuthenticatedTokenController;
 use App\Http\Controllers\Auth\RegisterUserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,9 +19,9 @@ Route::get('/email/verify/{id}/{hash}', [RegisterUserController::class, 'verifyE
 Route::get('login', [FrontendController::class, 'login'])
     ->name('login');
 
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/login', [AuthenticatedTokenController::class, 'store']);
 Route::post('/register', [RegisterUserController::class, 'store']);
 
 Route::group(['prefix' => '/', 'middleware' => ['auth:sanctum']], function () {
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    Route::post('/logout', [AuthenticatedTokenController::class, 'destroy']);
 });
