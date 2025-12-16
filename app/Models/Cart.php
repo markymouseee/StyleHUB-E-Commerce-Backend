@@ -12,6 +12,7 @@ class Cart extends Model
     use HasFactory;
 
     protected $table = 'carts';
+    public $timestamps = true;
 
     protected $fillable = [
         'user_id',

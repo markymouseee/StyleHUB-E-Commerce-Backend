@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repositories\Interfaces;
+namespace App\Repositories;
 
 use App\Models\Product;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -18,7 +19,7 @@ class ProductRepository implements ProductRepositoryInterface
             $query->where('name', 'like', '%' . $filters['search'] . '%');
         }
 
-        return $query->paginate(12);
+        return $query->paginate(10);
     }
 
     public function find(int $id): Product

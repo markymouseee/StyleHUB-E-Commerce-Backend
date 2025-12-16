@@ -47,8 +47,11 @@ class AuthenticatedTokenController extends Controller
 
         RateLimiter::clear($request->throttleKey());
 
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return $this->success([
-            'user' => $user
+            'user' => $user,
+            'token' => $token
         ]);
     }
 

@@ -3,6 +3,9 @@
 use App\Http\Controllers\Api\FrontendController;
 use App\Http\Controllers\Auth\AuthenticatedTokenController;
 use App\Http\Controllers\Auth\RegisterUserController;
+use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Product\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -20,8 +23,27 @@ Route::get('login', [FrontendController::class, 'login'])
     ->name('login');
 
 Route::post('/login', [AuthenticatedTokenController::class, 'store']);
+
 Route::post('/register', [RegisterUserController::class, 'store']);
 
-Route::group(['prefix' => '/', 'middleware' => ['auth:sanctum']], function () {
-    Route::post('/logout', [AuthenticatedTokenController::class, 'destroy']);
+Route::get('/get-all-products', [ProductController::class, 'getAll']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/store-product', [ProductController::class, 'store']);
+
+    Route::get('/get-products', [ProductController::class, 'index']);
+
+    Route::get('/get-categories', [CategoryController::class, 'index']);
+
+    Route::post('/store-category', [CategoryController::class, 'store']);
+
+    Route::delete('/delete-category/{id}', [CategoryController::class, 'destroy']);
+
+    Route::post('/cart/add', [CartController::class, 'store']);
+
+    Route::get('/get-cart-count', [CartController::class, 'index']);
+
+    Route::get('/cart/items/{id}', [CartController::class, 'show']);
+
+    Route::delete('/cart/remove/{id}', [CartController::class, 'destroy']);
 });

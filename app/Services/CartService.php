@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\CartRepository;
-use App\Repositories\Interfaces\ProductRepository;
+use App\Repositories\ProductRepository;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +29,7 @@ class CartService
     public function viewCart($userId)
     {
         $cart = $this->cartRepository->getOrCreateCartForUser($userId);
-        return $cart->load('items.product');
+        return $cart->load('cartItems.product');
     }
 
     public function checkout($userId, $address)
