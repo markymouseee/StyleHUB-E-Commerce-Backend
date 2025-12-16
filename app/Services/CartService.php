@@ -44,12 +44,13 @@ class CartService
         $total = 0;
 
         foreach ($items as $item) {
-            if ($item->product->stock < $items->quantity) {
+            if ($item->product->stock < $item->quantity) {
                 throw new ValidationException('Not enough stock for product: ' . $item->product->name);
             }
 
             $total += $item->product->price * $item->quantity;
         }
+
 
         DB::beginTransaction();
         try {
@@ -77,7 +78,7 @@ class CartService
             $this->cartRepository->clearCart($cart->id);
             DB::commit();
 
-            return $order->load('items.product');
+            return $order->load('orderItems.product');
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

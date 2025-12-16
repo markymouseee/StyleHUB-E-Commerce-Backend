@@ -19,6 +19,16 @@ class CartController extends Controller
         return CartItem::count();
     }
 
+    public function checkOut(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'address' => 'required'
+        ]);
+
+        return $this->cartService->checkout($validated['user_id'], $validated['address']);
+    }
+
     public function store(Request $request)
     {
         $validate = $request->validate([

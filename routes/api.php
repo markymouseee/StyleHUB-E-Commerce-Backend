@@ -5,12 +5,10 @@ use App\Http\Controllers\Auth\AuthenticatedTokenController;
 use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Product\ProductController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
 
 Route::get('/email/verify', function () {
     return 'Please verify your email';
@@ -46,4 +44,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart/items/{id}', [CartController::class, 'show']);
 
     Route::delete('/cart/remove/{id}', [CartController::class, 'destroy']);
+
+    Route::post('/cart/checkout', [CartController::class, 'checkOut']);
+
+    Route::get('/get-orders', [OrderController::class, 'index']);
+
+    Route::post('/orders/approve', [OrderController::class, 'approve']);
+    Route::post('/orders/{order}/decline', [OrderController::class, 'decline']);
 });
